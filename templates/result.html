@@ -16,7 +16,7 @@
     {% endif %}
     <a href="{{ url_for('index') }}">Back to Simulator</a>
     <script>
-        var graphData = {{ graphJSON | safe }};
+        var graphData = {{ graph_data | tojson }};
         Plotly.newPlot('graph', graphData.data, graphData.layout);
     </script>
 </body>

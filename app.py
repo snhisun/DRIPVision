@@ -1,4 +1,3 @@
-# app.py
 from flask import Flask, render_template, request
 import yfinance as yf
 import pandas as pd
@@ -54,9 +53,9 @@ def simulate():
         index_name = get_index_name(index_symbol)
         data.append(go.Scatter(x=index_df.index, y=index_df['Index Value'], name=index_name))
 
-    graphJSON = json.dumps({'data': data, 'layout': {'title': 'Portfolio vs Index'}}, default=str)
+    graph_data = {'data': data, 'layout': {'title': 'Portfolio vs Index'}}
 
-    return render_template('result.html', graphJSON=graphJSON, portfolio_return=round(portfolio_return, 2),
+    return render_template('result.html', graph_data=graph_data, portfolio_return=round(portfolio_return, 2),
                            index_return=round(index_return, 2) if index_return else None, index_name=index_name)
 
 def get_portfolio_data(tickers, weights, start_date, end_date):
@@ -83,10 +82,7 @@ def get_portfolio_data(tickers, weights, start_date, end_date):
         total_shares.iloc[0] = shares
 
         for i in range(1, len(price_data)):
-            current_date = price_data.index[i]
-            previous_date = price_data.index[i - 1]
             total_shares.iloc[i] = total_shares.iloc[i - 1]
-
             # Check for dividends
             if dividend_data.iloc[i] > 0:
                 dividend = dividend_data.iloc[i]
