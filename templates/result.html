@@ -1,0 +1,23 @@
+<!-- templates/result.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Simulation Results</title>
+    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+</head>
+<body>
+    <h1>Simulation Results</h1>
+    <div id="graph"></div>
+    <h2>Returns</h2>
+    <p>Your Portfolio Return: {{ portfolio_return }}%</p>
+    {% if index_return %}
+    <p>{{ index_name }} Return: {{ index_return }}%</p>
+    {% endif %}
+    <a href="{{ url_for('index') }}">Back to Simulator</a>
+    <script>
+        var graphData = {{ graphJSON | safe }};
+        Plotly.newPlot('graph', graphData.data, graphData.layout);
+    </script>
+</body>
+</html>

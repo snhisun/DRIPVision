@@ -1,0 +1,13 @@
+/* static/style.css */
+body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+}
+
+.stock-entry {
+    margin-bottom: 10px;
+}
+
+#add-stock {
+    margin-top: 10px;
+}

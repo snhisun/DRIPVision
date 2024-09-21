@@ -1,0 +1,38 @@
+<!-- templates/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Dividend Reinvestment Simulator</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>Dividend Reinvestment Stock Portfolio Simulator</h1>
+    <form action="/simulate" method="post">
+        <div id="stocks">
+            <div class="stock-entry">
+                <input type="text" name="ticker[]" placeholder="Stock Ticker (e.g., AAPL)" required>
+                <input type="number" name="weight[]" placeholder="Weight (%)" min="0" max="100" required>
+            </div>
+        </div>
+        <button type="button" id="add-stock">Add Another Stock</button>
+        <br><br>
+        <label for="index">Compare to Index:</label>
+        <select name="index" id="index">
+            <option value="None">None</option>
+            <option value="^GSPC">S&P 500</option>
+            <option value="^NDX">Nasdaq 100</option>
+            <option value="^DJI">Dow</option>
+            <option value="^RUT">Russell 2000</option>
+        </select>
+        <br><br>
+        <label for="start-date">Start Date:</label>
+        <input type="date" name="start_date" required>
+        <label for="end-date">End Date:</label>
+        <input type="date" name="end_date" required>
+        <br><br>
+        <button type="submit">Visualize</button>
+    </form>
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
