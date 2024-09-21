@@ -1,8 +1,9 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 import yfinance as yf
 import pandas as pd
 import numpy as np
 import plotly.graph_objs as go
+from plotly.utils import PlotlyJSONEncoder
 import json
 
 app = Flask(__name__)
@@ -53,9 +54,12 @@ def simulate():
         index_name = get_index_name(index_symbol)
         data.append(go.Scatter(x=index_df.index, y=index_df['Index Value'], name=index_name))
 
-    graph_data = {'data': data, 'layout': {'title': 'Portfolio vs Index'}}
+    fig = go.Figure(data=data)
+    fig.update_layout(title='Portfolio vs Index')
 
-    return render_template('result.html', graph_data=graph_data, portfolio_return=round(portfolio_return, 2),
+    graphJSON = json.dumps(fig, cls=PlotlyJSONEncoder)
+
+    return render_template('result.html', graphJSON=graphJSON, portfolio_return=round(portfolio_return, 2),
                            index_return=round(index_return, 2) if index_return else None, index_name=index_name)
 
 def get_portfolio_data(tickers, weights, start_date, end_date):

@@ -1,4 +1,5 @@
 /* static/style.css */
+
 body {
     font-family: Arial, sans-serif;
     margin: 20px;
@@ -8,6 +9,39 @@ body {
     margin-bottom: 10px;
 }
 
+.stock-entry input[type="text"],
+.stock-entry input[type="number"] {
+    width: 250px;  /* Adjust the width as needed */
+    padding: 8px;
+    margin-right: 10px;
+}
+
+.stock-entry button.remove-stock {
+    padding: 8px;
+}
+
 #add-stock {
     margin-top: 10px;
+    padding: 10px 15px;
+}
+
+label {
+    display: inline-block;
+    width: 120px;
+    margin-bottom: 10px;
+}
+
+input[type="date"] {
+    padding: 8px;
+    margin-bottom: 10px;
+}
+
+select {
+    padding: 8px;
+    margin-bottom: 10px;
+}
+
+button[type="submit"] {
+    padding: 10px 20px;
+    font-size: 16px;
 }

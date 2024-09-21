@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Simulation Results</title>
-    <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.16.1.min.js"></script>
 </head>
 <body>
     <h1>Simulation Results</h1>
@@ -16,8 +16,8 @@
     {% endif %}
     <a href="{{ url_for('index') }}">Back to Simulator</a>
     <script>
-        var graphData = {{ graph_data | tojson }};
-        Plotly.newPlot('graph', graphData.data, graphData.layout);
+        var graphJSON = {{ graphJSON | safe }};
+        Plotly.react('graph', graphJSON.data, graphJSON.layout);
     </script>
 </body>
 </html>
