@@ -5,7 +5,6 @@ import pandas as pd
 import numpy as np
 import plotly.graph_objs as go
 import json
-from datetime import datetime
 
 app = Flask(__name__)
 
@@ -65,7 +64,7 @@ def get_portfolio_data(tickers, weights, start_date, end_date):
     investment_amounts = [initial_investment * (weight / 100) for weight in weights]
 
     # Create a date range for the entire period
-    date_range = pd.date_range(start=start_date, end=end_date)
+    date_range = pd.date_range(start=start_date, end=end_date, freq='B')  # 'B' for business days
 
     portfolio_values = pd.DataFrame(index=date_range)
 
@@ -76,26 +75,35 @@ def get_portfolio_data(tickers, weights, start_date, end_date):
 
         # Get price and dividend data
         price_data = stock_data['Adj Close']
-        dividend_data = stock_data[stock_data['Dividends'] > 0]['Dividends']
+        dividend_data = stock_data['Dividends']
 
         # Simulate dividend reinvestment
         shares = investment / price_data.iloc[0]
-        total_shares = shares.copy()
+        total_shares = pd.Series(index=price_data.index)
+        total_shares.iloc[0] = shares
 
-        for date in price_data.index[1:]:
-            if date in dividend_data.index:
+        for i in range(1, len(price_data)):
+            current_date = price_data.index[i]
+            previous_date = price_data.index[i - 1]
+            total_shares.iloc[i] = total_shares.iloc[i - 1]
+
+            # Check for dividends
+            if dividend_data.iloc[i] > 0:
+                dividend = dividend_data.iloc[i]
+                # Calculate dividend amount
+                dividend_amount = total_shares.iloc[i - 1] * dividend
                 # Reinvest dividends
-                dividend = dividend_data.loc[date]
-                dividend_amount = total_shares.loc[date - pd.Timedelta(days=1)] * dividend
-                additional_shares = dividend_amount / price_data.loc[date]
-                total_shares.loc[date] = total_shares.loc[date - pd.Timedelta(days=1)] + additional_shares
-            else:
-                total_shares.loc[date] = total_shares.loc[date - pd.Timedelta(days=1)]
+                additional_shares = dividend_amount / price_data.iloc[i]
+                total_shares.iloc[i] += additional_shares
 
         # Calculate investment value over time
         investment_values = total_shares * price_data
         investment_values = investment_values.reindex(date_range).fillna(method='ffill')
         portfolio_values[ticker] = investment_values
+
+    # Fill any missing values
+    portfolio_values.fillna(method='ffill', inplace=True)
+    portfolio_values.fillna(method='bfill', inplace=True)
 
     return portfolio_values
 
